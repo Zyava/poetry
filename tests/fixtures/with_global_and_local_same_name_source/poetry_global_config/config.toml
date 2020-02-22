@@ -1,0 +1,4 @@
+[repositories]
+[repositories.foo]
+name = "foo"
+url = "https://foo.bar/simple/"

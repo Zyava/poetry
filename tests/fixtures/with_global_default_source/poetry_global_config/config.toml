@@ -1,0 +1,4 @@
+[repositories.bar]
+name = "global-bar"
+url = "https://bar.bar/simple/"
+default = true

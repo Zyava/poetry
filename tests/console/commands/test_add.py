@@ -9,8 +9,8 @@ from tests.helpers import get_dependency
 from tests.helpers import get_package
 
 
-def test_add_no_constraint(app, repo, installer):
-    command = app.find("add")
+def test_add_no_constraint(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("cachy", "0.1.0"))
@@ -36,14 +36,14 @@ Package operations: 1 install, 0 updates, 0 removals
 
     assert len(installer.installs) == 1
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "cachy" in content["dependencies"]
     assert content["dependencies"]["cachy"] == "^0.2.0"
 
 
-def test_add_equal_constraint(app, repo, installer):
-    command = app.find("add")
+def test_add_equal_constraint(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("cachy", "0.1.0"))
@@ -69,8 +69,8 @@ Package operations: 1 install, 0 updates, 0 removals
     assert len(installer.installs) == 1
 
 
-def test_add_greater_constraint(app, repo, installer):
-    command = app.find("add")
+def test_add_greater_constraint(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("cachy", "0.1.0"))
@@ -96,8 +96,8 @@ Package operations: 1 install, 0 updates, 0 removals
     assert len(installer.installs) == 1
 
 
-def test_add_constraint_with_extras(app, repo, installer):
-    command = app.find("add")
+def test_add_constraint_with_extras(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     cachy1 = get_package("cachy", "0.1.0")
@@ -130,8 +130,8 @@ Package operations: 2 installs, 0 updates, 0 removals
     assert len(installer.installs) == 2
 
 
-def test_add_constraint_dependencies(app, repo, installer):
-    command = app.find("add")
+def test_add_constraint_dependencies(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     cachy2 = get_package("cachy", "0.2.0")
@@ -163,8 +163,8 @@ Package operations: 2 installs, 0 updates, 0 removals
     assert len(installer.installs) == 2
 
 
-def test_add_git_constraint(app, repo, installer):
-    command = app.find("add")
+def test_add_git_constraint(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -190,7 +190,7 @@ Package operations: 2 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 2
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {
@@ -198,8 +198,8 @@ Package operations: 2 installs, 0 updates, 0 removals
     }
 
 
-def test_add_git_constraint_with_poetry(app, repo, installer):
-    command = app.find("add")
+def test_add_git_constraint_with_poetry(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -225,8 +225,8 @@ Package operations: 2 installs, 0 updates, 0 removals
     assert len(installer.installs) == 2
 
 
-def test_add_git_constraint_with_extras(app, repo, installer):
-    command = app.find("add")
+def test_add_git_constraint_with_extras(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -255,7 +255,7 @@ Package operations: 4 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 4
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {
@@ -264,8 +264,8 @@ Package operations: 4 installs, 0 updates, 0 removals
     }
 
 
-def test_add_git_ssh_constraint(app, repo, installer):
-    command = app.find("add")
+def test_add_git_ssh_constraint(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -291,7 +291,7 @@ Package operations: 2 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 2
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {
@@ -300,11 +300,11 @@ Package operations: 2 installs, 0 updates, 0 removals
     }
 
 
-def test_add_directory_constraint(app, repo, installer, mocker):
+def test_add_directory_constraint(app_with_mocked_repo, repo, installer, mocker):
     p = mocker.patch("poetry.utils._compat.Path.cwd")
     p.return_value = Path(__file__) / ".."
 
-    command = app.find("add")
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -330,17 +330,17 @@ Package operations: 2 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 2
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {"path": "../git/github.com/demo/demo"}
 
 
-def test_add_directory_with_poetry(app, repo, installer, mocker):
+def test_add_directory_with_poetry(app_with_mocked_repo, repo, installer, mocker):
     p = mocker.patch("poetry.utils._compat.Path.cwd")
     p.return_value = Path(__file__) / ".."
 
-    command = app.find("add")
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -366,11 +366,11 @@ Package operations: 2 installs, 0 updates, 0 removals
     assert len(installer.installs) == 2
 
 
-def test_add_file_constraint_wheel(app, repo, installer, mocker):
+def test_add_file_constraint_wheel(app_with_mocked_repo, repo, installer, mocker):
     p = mocker.patch("poetry.utils._compat.Path.cwd")
     p.return_value = Path(__file__) / ".."
 
-    command = app.find("add")
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -395,7 +395,7 @@ Package operations: 2 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 2
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {
@@ -403,11 +403,11 @@ Package operations: 2 installs, 0 updates, 0 removals
     }
 
 
-def test_add_file_constraint_sdist(app, repo, installer, mocker):
+def test_add_file_constraint_sdist(app_with_mocked_repo, repo, installer, mocker):
     p = mocker.patch("poetry.utils._compat.Path.cwd")
     p.return_value = Path(__file__) / ".."
 
-    command = app.find("add")
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -432,7 +432,7 @@ Package operations: 2 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 2
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {
@@ -440,8 +440,8 @@ Package operations: 2 installs, 0 updates, 0 removals
     }
 
 
-def test_add_constraint_with_extras_option(app, repo, installer):
-    command = app.find("add")
+def test_add_constraint_with_extras_option(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     cachy2 = get_package("cachy", "0.2.0")
@@ -473,7 +473,7 @@ Package operations: 2 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 2
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "cachy" in content["dependencies"]
     assert content["dependencies"]["cachy"] == {
@@ -482,11 +482,11 @@ Package operations: 2 installs, 0 updates, 0 removals
     }
 
 
-def test_add_url_constraint_wheel(app, repo, installer, mocker):
+def test_add_url_constraint_wheel(app_with_mocked_repo, repo, installer, mocker):
     p = mocker.patch("poetry.utils._compat.Path.cwd")
     p.return_value = Path(__file__) / ".."
 
-    command = app.find("add")
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -513,7 +513,7 @@ Package operations: 2 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 2
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {
@@ -521,8 +521,10 @@ Package operations: 2 installs, 0 updates, 0 removals
     }
 
 
-def test_add_url_constraint_wheel_with_extras(app, repo, installer, mocker):
-    command = app.find("add")
+def test_add_url_constraint_wheel_with_extras(
+    app_with_mocked_repo, repo, installer, mocker
+):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pendulum", "1.4.4"))
@@ -553,7 +555,7 @@ Package operations: 4 installs, 0 updates, 0 removals
 
     assert len(installer.installs) == 4
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "demo" in content["dependencies"]
     assert content["dependencies"]["demo"] == {
@@ -562,8 +564,8 @@ Package operations: 4 installs, 0 updates, 0 removals
     }
 
 
-def test_add_constraint_with_python(app, repo, installer):
-    command = app.find("add")
+def test_add_constraint_with_python(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     cachy2 = get_package("cachy", "0.2.0")
@@ -590,15 +592,15 @@ Package operations: 1 install, 0 updates, 0 removals
 
     assert len(installer.installs) == 1
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "cachy" in content["dependencies"]
     assert content["dependencies"]["cachy"] == {"version": "0.2.0", "python": ">=2.7"}
 
 
-def test_add_constraint_with_platform(app, repo, installer):
+def test_add_constraint_with_platform(app_with_mocked_repo, repo, installer):
     platform = sys.platform
-    command = app.find("add")
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     cachy2 = get_package("cachy", "0.2.0")
@@ -625,7 +627,7 @@ Package operations: 1 install, 0 updates, 0 removals
 
     assert len(installer.installs) == 1
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "cachy" in content["dependencies"]
     assert content["dependencies"]["cachy"] == {
@@ -634,8 +636,8 @@ Package operations: 1 install, 0 updates, 0 removals
     }
 
 
-def test_add_to_section_that_does_no_exist_yet(app, repo, installer):
-    command = app.find("add")
+def test_add_to_section_that_does_no_exist_yet(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("cachy", "0.1.0"))
@@ -661,14 +663,14 @@ Package operations: 1 install, 0 updates, 0 removals
 
     assert len(installer.installs) == 1
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "cachy" in content["dev-dependencies"]
     assert content["dev-dependencies"]["cachy"] == "^0.2.0"
 
 
-def test_add_should_not_select_prereleases(app, repo, installer):
-    command = app.find("add")
+def test_add_should_not_select_prereleases(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("pyyaml", "3.13"))
@@ -694,19 +696,19 @@ Package operations: 1 install, 0 updates, 0 removals
 
     assert len(installer.installs) == 1
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "pyyaml" in content["dependencies"]
     assert content["dependencies"]["pyyaml"] == "^3.13"
 
 
 def test_add_should_display_an_error_when_adding_existing_package_with_no_constraint(
-    app, repo, installer
+    app_with_mocked_repo, repo, installer
 ):
-    content = app.poetry.file.read()
+    content = app_with_mocked_repo.poetry.file.read()
     content["tool"]["poetry"]["dependencies"]["foo"] = "^1.0"
-    app.poetry.file.write(content)
-    command = app.find("add")
+    app_with_mocked_repo.poetry.file.write(content)
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("foo", "1.1.2"))
@@ -718,12 +720,12 @@ def test_add_should_display_an_error_when_adding_existing_package_with_no_constr
 
 
 def test_add_should_work_when_adding_existing_package_with_latest_constraint(
-    app, repo, installer
+    app_with_mocked_repo, repo, installer
 ):
-    content = app.poetry.file.read()
+    content = app_with_mocked_repo.poetry.file.read()
     content["tool"]["poetry"]["dependencies"]["foo"] = "^1.0"
-    app.poetry.file.write(content)
-    command = app.find("add")
+    app_with_mocked_repo.poetry.file.write(content)
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("foo", "1.1.2"))
@@ -746,14 +748,16 @@ Package operations: 1 install, 0 updates, 0 removals
 
     assert expected in tester.io.fetch_output()
 
-    content = app.poetry.file.read()["tool"]["poetry"]
+    content = app_with_mocked_repo.poetry.file.read()["tool"]["poetry"]
 
     assert "foo" in content["dependencies"]
     assert content["dependencies"]["foo"] == "^1.1.2"
 
 
-def test_add_chooses_prerelease_if_only_prereleases_are_available(app, repo, installer):
-    command = app.find("add")
+def test_add_chooses_prerelease_if_only_prereleases_are_available(
+    app_with_mocked_repo, repo, installer
+):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("foo", "1.2.3b0"))
@@ -778,8 +782,8 @@ Package operations: 1 install, 0 updates, 0 removals
     assert expected in tester.io.fetch_output()
 
 
-def test_add_preferes_stable_releases(app, repo, installer):
-    command = app.find("add")
+def test_add_preferes_stable_releases(app_with_mocked_repo, repo, installer):
+    command = app_with_mocked_repo.find("add")
     tester = CommandTester(command)
 
     repo.add_package(get_package("foo", "1.2.3"))
